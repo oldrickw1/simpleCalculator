@@ -4,18 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    TextView resultTV, solutionTV;
+    TextView resultTV, expressionTV;
     MaterialButton buttonC,buttonBrackOpen,buttonBrackClose;
     MaterialButton buttonDivide,buttonMultiply,buttonPlus,buttonMinus,buttonEquals;
     MaterialButton button0,button1,button2,button3,button4,button5,button6,button7,button8,button9;
     MaterialButton buttonAC,buttonDot;
+    boolean justCalculated;
 
 
     @Override
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         resultTV = findViewById(R.id.result_tv);
-        solutionTV = findViewById(R.id.solution_tv);
+        expressionTV = findViewById(R.id.solution_tv);
 
         assignId(buttonC,R.id.button_c);
         assignId(buttonBrackOpen,R.id.button_open_bracket);
@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assignId(button8, R.id.button_8);
         assignId(button9, R.id.button_9);
 
+        justCalculated = false;
+
 
     }
 
@@ -58,6 +60,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         MaterialButton button = (MaterialButton) view;
         String buttonText = button.getText().toString();
-        solutionTV.setText(buttonText);
+        String dataToCalculate = expressionTV.getText().toString();
+
+        if (buttonText.equals("AC")) {
+            expressionTV.setText("");
+            resultTV.setText("0");
+            return;
+        }
+        if (buttonText.equals("=")) {
+            justCalculated = true;
+            resultTV.setText(expressionTV.getText());
+            return;
+        }
+        if (buttonText.equals("C")) {
+            dataToCalculate = dataToCalculate.substring(0, dataToCalculate.length()-1);
+        }
+        else {
+            if (dataToCalculate.equals("0") || justCalculated) {
+                dataToCalculate = "";
+                justCalculated = false;
+            }
+            dataToCalculate = dataToCalculate + buttonText;
+        }
+        expressionTV.setText(dataToCalculate);
     }
 }
